@@ -1,4 +1,4 @@
-# DSSTR Game
+# 🎮 D.S.S.T.R. Game
 Projeto de Jogos Virtuais 4° Semestre
 
 Alunos: 
