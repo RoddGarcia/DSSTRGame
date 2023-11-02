@@ -1,43 +1,31 @@
 #       mudar
 #       Testar cenários interativo (terá colisão do player com o cenário do Matheus)
-#       O tempo_restante deve aparecer em todos os níves (o tempo restante não resetará)
-#       Adicionar música
-#       Adicionar efeitos sonoros
-#       Adicionar sprites
-
 import pygame
-from fase1 import main as fase1_main
-from fase2 import main as fase2_main
-from fase3 import main as fase3_main
-import fase1
-import time
+from fase1 import main as fase1_main  # Importar a fase 1
+from fase2 import main as fase2_main  # Importar a fase 2
+from fase1 import avancar_fase
+from tiles0 import main as tiles_main  # Importar a fase teste
 
 pygame.init()
 
 largura_tela = 800
-altura_tela = 600
+altura_tela = 800
 
-tempo_inicial = time.time()
-tempo_limite = 200
-
-fases = [
-    fase1_main, 
-    fase2_main, 
-    fase3_main
-    ]
+fases = [fase1_main, tiles_main, fase2_main]
 
 def main():
-    fase_atual = 0
-    # Configurações iniciais do programa principal
-    tela = pygame.display.set_mode((largura_tela, altura_tela))
-    pygame.display.set_caption("D.S.S.T.R")
+  fase_atual = 0
+  # Configurações iniciais do programa principal
+  tela = pygame.display.set_mode((largura_tela, altura_tela))
+  pygame.display.set_caption("D.S.S.T.R")
 
-    while fase_atual < len(fases):
-        # Inicialização da fase
-        fases[fase_atual]()
+  for _ in fases:
+    # Inicialização da fase
+    fases[fase_atual]()
+    # pygame.display.update()
 
-        if fase1.nivel_concluido:
-            fase_atual += 1
+    if avancar_fase():
+      fase_atual += 1
 
-if __name__ == "__main__":
-    main()
+if __name__ == main():
+  main()

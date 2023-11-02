@@ -16,21 +16,22 @@ cinza = (128, 128, 128)
 jogador_x = largura_tela // 2
 jogador_y = altura_tela - 50
 
+
 pontos_azuis = []
 
 energeticos = []
 energetico_chanceDeSpawn = 1
 energetico_duracao = 5  # Duração boost em segundos
-energetico_boost = 7  # Acréscimo de boost
+energetico_boost = 10  # Acréscimo de boost
 
 energetico_timer = None
 
 refens = []
 
-num_refens = 3
+num_refens = 5
 
 obstaculos = []
-num_obstaculos = 7
+num_obstaculos = 5
 
 clock = pygame.time.Clock()
 
@@ -40,9 +41,9 @@ tempo_limite = 200
 
 refens_salvos = 0
 
+
 #Classe Player
 class Player:
-
   def __init__(self, x, y, vel):
     self.x = x
     self.y = y
@@ -67,7 +68,8 @@ class Player:
 
   def coletar_curativos(self, curativos):
     for curativo in curativos:
-      if pygame.Rect(self.x, self.y, 30, 30).colliderect(pygame.Rect(curativo[0], curativo[1], 10, 10)):
+      if pygame.Rect(self.x, self.y, 30, 30).colliderect(
+          pygame.Rect(curativo[0], curativo[1], 10, 10)):
         curativos.remove(curativo)
         if curativo[2] == azul:
           self.curativo_coletados['Azul'] += 1
@@ -78,7 +80,8 @@ class Player:
 
   def verificar_colisao_obstaculos(self, obstaculos):
     for obstaculo in obstaculos:
-      obstaculo_rect = pygame.Rect(obstaculo[0], obstaculo[1], obstaculo[2], obstaculo[2])
+      obstaculo_rect = pygame.Rect(obstaculo[0], obstaculo[1], obstaculo[2],
+                                   obstaculo[2])
       if pygame.Rect(self.x, self.y, 30, 30).colliderect(obstaculo_rect):
         return True
     return False
@@ -105,6 +108,7 @@ class Refem:
       jogador.refens_salvos += 1
       refens.remove(self)
 
+
 #Classe Energético
 class Energetico:
 
@@ -121,7 +125,8 @@ class Energetico:
 
   def check_collision(self, player):
     if self.visible and pygame.Rect(player.x, player.y, 30, 30).colliderect(
-        pygame.Rect(self.x - self.radius, self.y - self.radius, 2 * self.radius, 2 * self.radius)):
+        pygame.Rect(self.x - self.radius, self.y - self.radius,
+                    2 * self.radius, 2 * self.radius)):
       self.visible = False
       player.boost_speed()
 
@@ -130,8 +135,8 @@ posicoes_curativos = [
   (100, 100), (200, 200), (300, 300), (400, 400), (500, 500), (100, 500),
   (200, 400), (300, 300), (400, 200), (500, 100), (600, 100), (700, 200),
   (700, 300), (700, 400), (600, 500), (100, 300), (200, 400), (300, 200),
-  (400, 100), (500, 500)
-]
+  (400, 100), (500, 500)]
+
 
 # Lista de posições diferentes para spawnar obstáculos
 posicoes_obstaculos = [(50, 50), (150, 150), (250, 250), (350, 350),
@@ -146,13 +151,14 @@ def criar_objetos():
     tamanho_obstaculo = random.randint(20, 40)
     obstaculos.append((x, y, tamanho_obstaculo))
 
-  posicoes_curativos = [(100, 100), (200, 200), (300, 300), (400, 400),
-                        (500, 500), (100, 500), (200, 400), (300, 300),
-                        (400, 200), (500, 100), (600, 100), (700, 200),
-                        (700, 300), (700, 400), (600, 500), (100, 300),
-                        (200, 400), (300, 200), (400, 100), (500, 500)]
+  posicoes_curativos = [
+        (100, 100), (200, 200), (300, 300), (400, 400), (500, 500),
+        (100, 500), (200, 400), (300, 300), (400, 200), (500, 100),
+        (600, 100), (700, 200), (700, 300), (700, 400), (600, 500),
+        (100, 300), (200, 400), (300, 200), (400, 100), (500, 500)
+    ]
 
-  # Escolha aleatória de posições para curativos
+    # Escolha aleatória de posições para curativos
   curativo_azul_positions = random.sample(posicoes_curativos, num_refens)
   posicoes_curativos = [pos for pos in posicoes_curativos if pos not in curativo_azul_positions]
   curativo_azul = [(x, y, azul) for x, y in curativo_azul_positions]
@@ -174,25 +180,24 @@ def criar_objetos():
 
   return curativo_azul, curativo_amarelo, curativo_cinza, energeticos, energetico_timer
 
+
 for _ in range(num_refens):
   refens = [
     Refem(random.randint(10, largura_tela - 10),
           random.randint(10, altura_tela - 200)) for _ in range(num_refens)]
 
 def main():
-  global jogador_x, jogador_y, energetico_timer, nivel_concluido, tempo_restante
-  nivel_concluido = False
+  global jogador_x, jogador_y, pontos_verdes_salvos, energetico_timer
 
   tela = pygame.display.set_mode((largura_tela, altura_tela))
   pygame.display.set_caption("D.S.S.T.R")
 
-  curativo_azul, curativo_amarelo, curativo_cinza, energeticos, energetico_timer = criar_objetos()
+  curativo_azul, curativo_amarelo, curativo_cinza, energeticos, energetico_timer = criar_objetos(
+  )
 
   jogador = Player(jogador_x, jogador_y, 5)
 
-  # Inicio do loop do jogo
-  while not nivel_concluido:
-
+  while True:
     for evento in pygame.event.get():
       if evento.type == pygame.QUIT:
         pygame.quit()
@@ -213,18 +218,20 @@ def main():
       pygame.quit()
       quit()
 
-    # ao resgatar todos os refens
+    # ao resgatar 3 refens
     if jogador.refens_salvos == num_refens:
       win_text = fonte.render("Você passou de fase!", True, verde)
       tela.blit(win_text, (300, 300))
       pygame.display.update()
       pygame.time.delay(2000)
-      nivel_concluido = True
+      pygame.quit()
+      quit()
 
     tempo_atual = time.time()
     tempo_restante = tempo_limite - (tempo_atual - tempo_inicial)
     if tempo_restante <= 0:
-      texto_derrota = fonte.render("Você perdeu! Tempo esgotado.", True, vermelho)
+      texto_derrota = fonte.render("Você perdeu! Tempo esgotado.", True,
+                                   vermelho)
       tela.blit(texto_derrota, (300, 300))
       pygame.display.update()
       pygame.time.delay(2000)
@@ -243,13 +250,17 @@ def main():
 
     # Verifiquar o contato entre o jogador e os reféns --> método verificar_jogador
     for refem in refens:
-      if pygame.Rect(jogador.x, jogador.y, 30, 30).colliderect(pygame.Rect(refem.x, refem.y, 10, 10)):
+      if pygame.Rect(jogador.x, jogador.y, 30,
+                     30).colliderect(pygame.Rect(refem.x, refem.y, 10, 10)):
         refem.verificar_jogador(jogador)
 
     for obstaculo in obstaculos:
-      pygame.draw.rect(tela, vermelho, (obstaculo[0], obstaculo[1], obstaculo[2], obstaculo[2]))
+      pygame.draw.rect(
+        tela, vermelho,
+        (obstaculo[0], obstaculo[1], obstaculo[2], obstaculo[2]))
 
-    pygame.draw.rect(tela, (0, 0, 0), pygame.Rect(jogador.x, jogador.y, 30, 30))
+    pygame.draw.rect(tela, (0, 0, 0), pygame.Rect(jogador.x, jogador.y, 30,
+                                                  30))
 
     # Desenhar os reféns
     for refem in refens:
@@ -266,17 +277,21 @@ def main():
       pygame.draw.circle(tela, curativo[2], (curativo[0], curativo[1]), 10)
 
     tempo_atual = time.time()
-    texto_tempo = fonte.render("Tempo restante: {:.1f}".format(tempo_restante),True, (0, 0, 0))
-    fase_atual_texto = fonte.render(("Fase 2"),True, (0, 0, 0))
-    pontos_azuis = fonte.render(f"Pontos azuis: {jogador.curativo_coletados['Azul']}", True, azul)
-    pontos_cinzas = fonte.render(f"Pontos amarelos: {jogador.curativo_coletados['Amarelo']}", True, azul)
-    pontos_amarelos = fonte.render(f"Pontos cinzas: {jogador.curativo_coletados['Cinza']}", True, azul)
-    refens_salvos = fonte.render(f"Reféns salvos: {jogador.refens_salvos}",True, azul)
-    velocidadedoplayer = fonte.render(f"Velocidade: {jogador.vel}", True, azul)
+    texto_tempo = fonte.render("Tempo restante: {:.1f}".format(tempo_restante),
+                               True, (0, 0, 0))
+    pontos_azuis = fonte.render(
+      f"Pontos azuis: {jogador.curativo_coletados['Azul']}", True, azul)
+    pontos_cinzas = fonte.render(
+      f"Pontos amarelos: {jogador.curativo_coletados['Amarelo']}", True, azul)
+    pontos_amarelos = fonte.render(
+      f"Pontos cinzas: {jogador.curativo_coletados['Cinza']}", True, azul)
+    refens_salvos = fonte.render(f"Reféns salvos: {jogador.refens_salvos}",
+                                 True, azul)
+    velocidadedoplayer = fonte.render(f"Velocidade: {jogador.vel}",
+                                      True, azul)
     tela.blit(pontos_azuis, (10, 10))
     tela.blit(velocidadedoplayer, (500, 10))
     tela.blit(pontos_cinzas, (10, 40))
-    tela.blit(fase_atual_texto, (20, 500))
     tela.blit(pontos_amarelos, (10, 70))
     tela.blit(refens_salvos, (10, 100))
     tela.blit(texto_tempo, (300, 10))
