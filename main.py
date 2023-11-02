@@ -22,7 +22,7 @@ def main():
   for _ in fases:
     # Inicialização da fase
     fases[fase_atual]()
-    # pygame.display.update()
+    pygame.display.update()
 
     if avancar_fase():
       fase_atual += 1

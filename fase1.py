@@ -26,11 +26,13 @@ jogador_x = 150
 jogador_y = 555
 
 refens = []
-
 num_refens = 2
 
 obstaculos = []
-num_obstaculos = 5
+num_obstaculos = 0
+
+paredes = []
+num_paredes = 1
 
 clock = pygame.time.Clock()
 
@@ -132,7 +134,15 @@ class Player:
       if pygame.Rect(self.x, self.y, 30, 30).colliderect(obstaculo_rect):
         return True
     return False
-
+  
+  def verificar_colisao_paredes(self, paredes):
+    for parede in paredes:
+      # print(f"parede {parede}")
+      parede_rect = pygame.Rect(parede)
+      if pygame.Rect(self.x, self.y, 30, 30).colliderect(parede_rect):
+        return True
+    return False
+  
 #Classe Refem
 class Refem:
 
@@ -156,33 +166,64 @@ class Refem:
       jogador.refens_salvos += 1
       refens.remove(self)
 
-
 def avancar_fase():
   if refens_salvos == num_refens:
     return True
   else:
     return False
 
-
 # Lista de posições diferentes para spawnar obstáculos
-posicoes_obstaculos = [(225, 120), (110, 155), (170, 280), (640, 440),
-                       (450, 450), (50, 450), (150, 350), (250, 250),
-                       (350, 190), (30, 285), (280, 155)]
+posicoes_obstaculos = [(95,380), (195,290), (205,75), 
+                       (275,130), (545,80), (530,290), 
+                       (670,120), (670,365), (540,445),
+                       (305,480)]
 
+posicoes_curativos = [
+        (25,485), (25,420), (25,355), (135,355),
+        (135,240), (135,135), (135,35), (315,165),
+        (510,165), (595,40), (595,255), (595,365),
+        (730,155), (730,330), (730,445), (730,500),
+        (590,435), (450,395)]
+
+posicoes_refens = [
+        (150,430), (100,155),
+        (610,80), (685,255),
+        (655,435), (445,520),
+]
+
+# Lista de posições para spawnar paredes
+posicoes_paredes = [
+  (0,545,70,50),
+  (0,0,80,330),
+  (235,0,290,130),
+  (690,0,160,120),
+  (230,215,300,140),
+  (235,560,1070,20),
+  (520,485,170,90),
+  (300,440,120,40),
+  (350,450,120,40),
+  (420,460,120,40),
+
+]
 
 def criar_objetos():
+  # Criar obstaculos
   for _ in range(num_obstaculos):
     x, y = random.choice(posicoes_obstaculos)
     tamanho_obstaculo = random.randint(20, 40)
     obstaculos.append((x, y, tamanho_obstaculo))
 
+  #   #Criar paredes invisiveis
+  for items in posicoes_paredes:
+    paredes.append(items)
+
   # Lista de posições diferentes para spawnar curativos
   posicoes_curativos = [
-        (145, 20), (145, 100), (245, 160), (380, 160), (505, 160), (605, 160),
-        (605, 55), (600, 230), (600, 290), (600, 345), (600, 405), (770, 465),
-        (665, 425), (610, 360), (745, 330), (745, 165), (510, 410), (375, 385),
-        (140, 250), (140, 330), (140, 420), (140, 555), (10, 455), (175, 395),
-        (30, 340)]
+        (25,485), (25,420), (25,355), (135,355),
+        (135,240), (135,135), (135,35), (315,165),
+        (510,165), (595,40), (595,255), (595,365),
+        (730,155), (730,330), (730,445), (730,500),
+        (590,435), (450,395)]
 
   # Escolha aleatória de posições para curativos
   curativo_azul_positions = random.sample(posicoes_curativos, num_refens)
@@ -199,10 +240,8 @@ def criar_objetos():
 
   return curativo_azul, curativo_amarelo, curativo_cinza
 
-
 for _ in range(num_refens):
-  refens = [Refem(random.randint(10, largura_tela - 10),
-          random.randint(10, altura_tela - 200)) for _ in range(num_refens)]
+  refens = [Refem(*posicoes_refens[i]) for i in range(num_refens)]
 
 fire_frames = [(155, 130),
 (635, 130),
@@ -234,9 +273,6 @@ def main():
   jogador = Player(jogador_x, jogador_y, 5)
 
   while True:
-    # Coord do jogador
-    print(f"Coordenadas: X={jogador.x}, Y={jogador.y}")
-
     for evento in pygame.event.get():
       if evento.type == pygame.QUIT:
         pygame.quit()
@@ -249,14 +285,42 @@ def main():
     tela.fill(branco)
     tempo_atual = time.time()
 
+    # Paredes invisiveis
+    for carac in posicoes_paredes:
+      pygame.draw.rect(tela, azul, (carac))
+
     tela.blit(bg_img, (0,0))
     tela.blit(player_img, (jogador.x - player_img.get_width() // 2, jogador.y - player_img.get_height() // 2))
     
     tela.blit(frame_0, (300,300))
 
-    pygame.draw.rect(tela, (255, 0, 0), pygame.Rect(jogador.x, jogador.y, 30, 30), 2)
-
+    #Verifica hitbox do jogador
+    pygame.draw.rect(tela, vermelho, pygame.Rect(jogador.x, jogador.y, 30, 30), 2)
+    
     keys = pygame.key.get_pressed()
+
+    # # Apresentar pontos de spawn dos curativos
+    # for x, y in posicoes_curativos:
+    #   pygame.draw.rect(tela, verde, (x, y, 20, 20))
+
+    # # Apresentar pontos de spawn dos reféns
+    # for x, y in posicoes_refens:
+    #   pygame.draw.rect(tela, amarelo, (x, y, 20, 20))
+    
+    # # # Apresentar pontos de spawn dos obstáculos
+    # for x, y in posicoes_obstaculos:
+    #   pygame.draw.rect(tela, vermelho, (x, y, 20, 20))
+
+    # verificar se jogador toca na parede 
+    if jogador.verificar_colisao_paredes(paredes):
+      if keys[pygame.K_LEFT] and jogador.x > 0:
+        jogador.x += jogador.vel 
+      if keys[pygame.K_RIGHT] and jogador.x < largura_tela - 30:
+        jogador.x -= jogador.vel 
+      if keys[pygame.K_DOWN] and jogador.y < altura_tela - 30:
+        jogador.y -= jogador.vel 
+      if keys[pygame.K_UP] and jogador.y > 0:
+        jogador.y += jogador.vel 
 
     # jogador toca no obstaculo vermelho
     if jogador.verificar_colisao_obstaculos(obstaculos):
@@ -279,7 +343,6 @@ def main():
       pygame.display.update()
       pygame.time.delay(3000)
       pygame.quit()
-      # quit()
 
     tempo_atual = time.time()
     tempo_restante = tempo_limite - (tempo_atual - tempo_inicial)
@@ -325,6 +388,7 @@ def main():
         cpr -= decremento_cpr
         tempo_ultimo_decremento = tempo_atual
 
+    # TRABALHANDO
     for obstaculo in obstaculos:
       pygame.draw.rect(tela, vermelho, (obstaculo[0], obstaculo[1], obstaculo[2], obstaculo[2]))
 
@@ -369,13 +433,13 @@ def main():
     pontos_cinzas = fonte.render(f"Pontos amarelos: {jogador.curativo_coletados['Amarelo']}", True, azul)
     pontos_amarelos = fonte.render(f"Pontos cinzas: {jogador.curativo_coletados['Cinza']}", True, azul)
     refens_salvos = fonte.render(f"Reféns salvos: {jogador.refens_salvos}", True, azul)
-    velocidadedoplayer = fonte.render(f"Velocidade: {jogador.vel}", True, azul)
+    # coord_do_jogador = fonte.render(f"Coordenadas Jogador: X={jogador.x}, Y={jogador.y}", True, preto)
     tela.blit(pontos_azuis, (10, 10))
-    tela.blit(velocidadedoplayer, (500, 10))
     tela.blit(pontos_cinzas, (10, 40))
     tela.blit(pontos_amarelos, (10, 70))
     tela.blit(refens_salvos, (10, 100))
     tela.blit(texto_tempo, (300, 10))
+    # tela.blit(coord_do_jogador, (0, 500))
 
     pygame.display.update()
     clock.tick(60)
