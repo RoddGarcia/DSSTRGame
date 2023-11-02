@@ -241,7 +241,7 @@ def criar_objetos():
   return curativo_azul, curativo_amarelo, curativo_cinza
 
 for _ in range(num_refens):
-  refens = [Refem(*posicoes_refens[i]) for i in range(num_refens)]
+  refens = [Refem(random.choice(posicoes_refens)[0], random.choice(posicoes_refens)[1]) for i in range(num_refens)]
 
 fire_frames = [(155, 130),
 (635, 130),
@@ -343,6 +343,7 @@ def main():
       pygame.display.update()
       pygame.time.delay(3000)
       pygame.quit()
+      quit()
 
     tempo_atual = time.time()
     tempo_restante = tempo_limite - (tempo_atual - tempo_inicial)
