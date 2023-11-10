@@ -9,7 +9,7 @@ pygame.init()
 largura_tela = 800
 altura_tela = 800
 
-fases = [fase1_main, tiles_main, fase2_main]
+fases = [fase1_main, fase2_main]
 
 def main():
   fase_atual = 0
@@ -20,7 +20,8 @@ def main():
   for _ in fases:
     # Inicialização da fase
     fases[fase_atual]()
-    # pygame.display.update()
+    print("fim")
+    pygame.display.update()
 
     if avancar_fase():
       fase_atual += 1

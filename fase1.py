@@ -26,7 +26,7 @@ jogador_x = 150
 jogador_y = 555
 
 refens = []
-num_refens = 2
+num_refens = 1
 
 obstaculos = []
 num_obstaculos = 20
@@ -211,10 +211,10 @@ class Refem:
         refens.remove(self)
 
 def avancar_fase():
-  if refens_salvos == num_refens:
-    return True
-  else:
-    return False
+    if refens_salvos == num_refens:
+      return True
+    else:
+      return False
 
 # lista de posições diferentes para spawnar obstáculos
 posicoes_obstaculos = [(95,380), (195,290), (205,75), 
@@ -253,8 +253,7 @@ def criar_objetos():
   # criar obstaculos
   for _ in range(num_obstaculos):
     x, y = random.choice(posicoes_obstaculos)
-    tamanho_obstaculo = random.randint(20, 40)
-    obstaculos.append((x, y, tamanho_obstaculo))
+    obstaculos.append((x, y, 20, 20))
 
   #   # criar paredes invisiveis
   for items in posicoes_paredes:
@@ -295,10 +294,10 @@ def main():
 
   ###FOGO
   fogo_animacao = pygame.image.load("./Assets/pixil-frame-0.png")
-  # fogo_animacao = pygame.transform.scale(fogo_animacao, (100, 100))
+  fogo_animacao = pygame.transform.scale(fogo_animacao, (70, 70))
 
   fogo_animacao2 = pygame.image.load("./Assets/pixil-frame-1.png")
-  # fogo_animacao2 = pygame.transform.scale(fogo_animacao2, (100, 100))
+  fogo_animacao2 = pygame.transform.scale(fogo_animacao2, (70, 70))
 
   fogo_animacao_frames = [fogo_animacao, fogo_animacao2]  
   fogo_index = 0  
@@ -374,7 +373,7 @@ def main():
       pygame.display.update()
       pygame.time.delay(3000)
       pygame.quit()
-      quit()
+      # quit()
 
     tempo_atual = time.time()
     tempo_restante = tempo_limite - (tempo_atual - tempo_inicial)
@@ -458,10 +457,8 @@ def main():
       fogo_index = (fogo_index + 1) % len(fogo_animacao_frames)
       fogo_update = current_time
 
-    # TRABALHANDO
     for obstaculo in obstaculos:
       tela.blit(fogo_animacao_frames[fogo_index], (obstaculo[0], obstaculo[1]))
-      # pygame.draw.rect(tela, vermelho, (obstaculo[0], obstaculo[1], obstaculo[2], obstaculo[2]))
 
     # desenhar os reféns
     for refem in refens:
