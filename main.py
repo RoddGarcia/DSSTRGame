@@ -2,6 +2,7 @@ import pygame
 from menu import main_menu
 from fase1 import main as fase1_main
 from fase2 import main as fase2_main
+from fase3 import main as fase3_main
 from tiles0 import main as tiles_main
 
 largura_tela = 800
@@ -10,6 +11,7 @@ altura_tela = 800
 fases = [main_menu, 
          fase1_main, 
          fase2_main,
+         fase3_main,
          2]
 
 def main():

@@ -29,9 +29,9 @@ num_paredes = 1
 
 clock = pygame.time.Clock()
 
-fonte = pygame.font.Font(None, 24)
+fonte = pygame.font.Font('./Assets/Grand9K Pixel.ttf', 13)
 tempo_inicial = time.time()
-tempo_limite = 200
+tempo_limite = 100
 
 refens_salvos = 0
 
@@ -56,7 +56,7 @@ player_img = pygame.transform.scale(player_img, (70, 70))
 bg_img = pygame.image.load("./Assets/Mapa1.2.png")
 bg_img = pygame.transform.scale(bg_img, (largura_tela, altura_tela))
 
-curativo_azul_img = pygame.image.load("./Assets/compressa.png")
+curativo_azul_img = pygame.image.load("./Assets/desfibrillator.PNG")
 curativo_azul_img = pygame.transform.scale(curativo_azul_img, (70, 70))
 
 curativo_amarelo_img = pygame.image.load("./Assets/bandage.png")
@@ -192,7 +192,7 @@ class Refem:
     cada_item = all(qtd > 0 for qtd in jogador.curativo_coletados.values())
 
     for refem in refens:
-      if cada_item and refem.fraturado == False:
+      if cada_item and refem.sangrando == False:
         for x in jogador.curativo_coletados:
           
           refem_salvo_sfx = pygame.mixer.Sound("Assets/SFX/refem_salvo.mp3")
@@ -411,7 +411,7 @@ def main():
                 pressed_space = True  # Define que a tecla SPACE está pressionada
             elif event.type == pygame.KEYUP and event.key == pygame.K_SPACE:  # Verifica se a tecla de espaço foi liberada
               pressed_space = False
-
+      
         elif refem.pulso and refem.sangrando:
             mensagem = fonte.render("A vítima está sangrando! Pressione E para enfaixá-la!", True, vermelho)
             mensagem_rect = mensagem.get_rect(center=(400, 525))
@@ -429,7 +429,7 @@ def main():
                     progresso_enfaixamento = 0
             else:
                 em_acao = False
-
+        """
         elif refem.pulso and refem.sangrando == False and refem.fraturado:
             mensagem = fonte.render("A vítima está fraturada! Pressione T para colocar uma Tala!", True, vermelho)
             mensagem_rect = mensagem.get_rect(center=(400, 525))
@@ -447,7 +447,7 @@ def main():
                     progresso_tala = 0
             else:
                 em_acao = False
-
+        """
         if cpr >= max_cpr:
             refem.pulso = True
             cpr = 0
@@ -503,11 +503,11 @@ def main():
     pygame.draw.rect(tela, vermelho, pygame.Rect(jogador.x, jogador.y, 30, 30), 2)# verifica hitbox do jogador
 
     tempo_atual = time.time()
-    texto_tempo = fonte.render("Tempo restante: {:.1f}".format(tempo_restante), True, (0, 0, 0))
-    pontos_azuis = fonte.render(f"Pontos azuis: {jogador.curativo_coletados['Azul']}", True, branco)
-    pontos_cinzas = fonte.render(f"Pontos amarelos: {jogador.curativo_coletados['Amarelo']}", True, branco)
-    pontos_amarelos = fonte.render(f"Pontos cinzas: {jogador.curativo_coletados['Cinza']}", True, branco)
-    refens_salvos = fonte.render(f"Reféns salvos: {jogador.refens_salvos}", True, branco)
+    texto_tempo = fonte.render("Tempo restante: {:.1f}".format(tempo_restante), True, branco)
+    pontos_azuis = fonte.render(f"Desfibriladores: {jogador.curativo_coletados['Azul']}", True, branco)
+    pontos_cinzas = fonte.render(f"Bandagens: {jogador.curativo_coletados['Amarelo']}", True, branco)
+    pontos_amarelos = fonte.render(f"Talas: {jogador.curativo_coletados['Cinza']}", True, branco)
+    refens_salvos = fonte.render(f"Vítimas salvas: {jogador.refens_salvos}", True, branco)
     # coord_do_jogador = fonte.render(f"Coordenadas Jogador: X={jogador.x}, Y={jogador.y}", True, preto)
     tela.blit(pontos_azuis, (10, 10))
     tela.blit(pontos_cinzas, (10, 40))
