@@ -1,31 +1,35 @@
-#       mudar
-#       Testar cenários interativo (terá colisão do player com o cenário do Matheus)
+# main.py
+
 import pygame
-from fase1 import main as fase1_main  # Importar a fase 1
-from fase2 import main as fase2_main  # Importar a fase 2
+from menu import main_menu
+from fase1 import main as fase1_main
+from fase2 import main as fase2_main
 from fase1 import avancar_fase
-from tiles0 import main as tiles_main  # Importar a fase teste
+from tiles0 import main as tiles_main
 
 pygame.init()
 
 largura_tela = 800
 altura_tela = 800
 
-fases = [fase1_main, tiles_main, fase2_main]
+fases = [main_menu, fase1_main, fase2_main]
 
 def main():
-  fase_atual = 0
-  # Configurações iniciais do programa principal
-  tela = pygame.display.set_mode((largura_tela, altura_tela))
-  pygame.display.set_caption("D.S.S.T.R")
+    fase_atual = 0
+    pygame.display.set_caption("D.S.S.T.R")
 
-  for _ in fases:
-    # Inicialização da fase
-    fases[fase_atual]()
-    # pygame.display.update()
+    while fase_atual < len(fases):
+        resultado = fases[fase_atual]()
 
-    if avancar_fase():
-      fase_atual += 1
+        if resultado == "Jogar":
+            fase_atual += 1
+            pygame.mixer.music.stop() 
 
-if __name__ == main():
-  main()
+        pygame.display.update()
+
+        if fase_atual == len(fases) - 1:
+            pygame.quit()
+            quit()
+
+if __name__ == "__main__":
+    main()
