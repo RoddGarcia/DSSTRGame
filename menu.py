@@ -60,10 +60,10 @@ def main_menu():
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                click_sfx = pygame.mixer.Sound("Assets/SFX/click.mp3")
-                click_sfx.play()
 
                 if play_botao.collidepoint(mouse_pos):
+                    click_sfx = pygame.mixer.Sound("Assets/SFX/click.mp3")
+                    click_sfx.play()
                     return "Jogar"
 
                 elif botao_instrucoes.collidepoint(mouse_pos):

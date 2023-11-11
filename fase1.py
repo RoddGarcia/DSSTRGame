@@ -22,7 +22,7 @@ refens = []
 num_refens = 1
 
 obstaculos = []
-num_obstaculos = 20
+num_obstaculos = 10
 
 paredes = []
 num_paredes = 1
@@ -360,8 +360,10 @@ def main():
       player_morte.play()
 
       tela.fill(branco)
-      gameover_text = fonte.render("Você morreu!", True, vermelho)
-      tela.blit(gameover_text, (300, 300))
+
+      npc_morto_img = pygame.image.load("./Assets/telaMorte.jpg")
+      tela.blit(npc_morto_img, (0, 0))
+
       pygame.display.update()
       pygame.time.delay(3000)
       pygame.quit()
@@ -374,7 +376,6 @@ def main():
       tela.blit(win_text, (300, 300))
       pygame.display.update()
       pygame.time.delay(3000)
-      pygame.quit()
       return "Jogar"
       # quit()
 
@@ -395,13 +396,14 @@ def main():
     # verificar o contato entre o jogador e os reféns --> método verificar_jogador
     for refem in refens:
       if pygame.Rect(jogador.x, jogador.y, 30, 30).colliderect(pygame.Rect(refem.x, refem.y, 10, 10)):
-        if not refem.pulso:
-          mensagem = fonte.render("A vítima está sem pulso! Pressione SPACE repetidamente para reanimá-la!", True, vermelho)
-          mensagem_rect = mensagem.get_rect(center=(400, 525))
-          tela.blit(mensagem, mensagem_rect)
-          pygame.draw.rect(tela, (255, 255, 255), (bar_x, bar_y, bar_width, bar_height))
-          progress_width = (cpr / 100) * bar_width
-          pygame.draw.rect(tela, progress_color, (bar_x, bar_y, progress_width, bar_height))
+        if all(qtd > 0 for qtd in jogador.curativo_coletados.values()):
+          if not refem.pulso:
+            mensagem = fonte.render("A vítima está sem pulso! Pressione SPACE repetidamente para reanimá-la!", True, vermelho)
+            mensagem_rect = mensagem.get_rect(center=(400, 525))
+            tela.blit(mensagem, mensagem_rect)
+            pygame.draw.rect(tela, (255, 255, 255), (bar_x, bar_y, bar_width, bar_height))
+            progress_width = (cpr / 100) * bar_width
+            pygame.draw.rect(tela, progress_color, (bar_x, bar_y, progress_width, bar_height))
 
           for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:  # Verifica se houve um pressionamento de tecla
@@ -507,13 +509,13 @@ def main():
     pontos_cinzas = fonte.render(f"Pontos amarelos: {jogador.curativo_coletados['Amarelo']}", True, branco)
     pontos_amarelos = fonte.render(f"Pontos cinzas: {jogador.curativo_coletados['Cinza']}", True, branco)
     refens_salvos = fonte.render(f"Reféns salvos: {jogador.refens_salvos}", True, branco)
-    coord_do_jogador = fonte.render(f"Coordenadas Jogador: X={jogador.x}, Y={jogador.y}", True, preto)
+    # coord_do_jogador = fonte.render(f"Coordenadas Jogador: X={jogador.x}, Y={jogador.y}", True, preto)
     tela.blit(pontos_azuis, (10, 10))
     tela.blit(pontos_cinzas, (10, 40))
     tela.blit(pontos_amarelos, (10, 70))
     tela.blit(refens_salvos, (10, 100))
     tela.blit(texto_tempo, (300, 10))
-    tela.blit(coord_do_jogador, (0, 500))
+    # tela.blit(coord_do_jogador, (0, 500))
 
     pygame.display.update()
     clock.tick(60)
