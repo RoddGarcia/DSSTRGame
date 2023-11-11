@@ -4,13 +4,6 @@ import math
 import time
 
 pygame.init()
-pygame.mixer.init()
-
-pygame.mixer.music.load("Assets/SFX/Game On - Tricycle Riot.mp3")
-
-pygame.mixer.music.set_volume(0.5)
-
-pygame.mixer.music.play(-1)
 
 largura_tela = 800
 altura_tela = 600
@@ -289,6 +282,14 @@ def main():
   global jogador_x, jogador_y, nivel_concluido, tempo_restante, cpr, max_cpr, em_acao, pressed_space, progresso_tala
   global tempo_decremento, decremento_cpr, limite_cpr, tempo_ultimo_decremento, mensagem, progresso_enfaixamento
 
+  pygame.mixer.init()
+
+  pygame.mixer.music.load("Assets/SFX/Game On - Tricycle Riot.mp3")
+
+  pygame.mixer.music.set_volume(0.5)
+
+  pygame.mixer.music.play(-1)
+
   tela = pygame.display.set_mode((largura_tela, altura_tela))
   pygame.display.set_caption("D.S.S.T.R - Fase 1")
 
@@ -358,6 +359,7 @@ def main():
       player_morte = pygame.mixer.Sound("Assets/SFX/morte.mp3")
       player_morte.play()
 
+      tela.fill(branco)
       gameover_text = fonte.render("Você morreu!", True, vermelho)
       tela.blit(gameover_text, (300, 300))
       pygame.display.update()

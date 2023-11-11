@@ -4,13 +4,6 @@ import math
 import time
 
 pygame.init()
-pygame.mixer.init()
-
-pygame.mixer.music.load("Assets/SFX/Game On - Tricycle Riot.mp3")
-
-pygame.mixer.music.set_volume(0.5)
-
-pygame.mixer.music.play(-1)
 
 largura_tela = 800
 altura_tela = 600
@@ -253,8 +246,7 @@ def criar_objetos():
   # criar obstaculos
   for _ in range(num_obstaculos):
     x, y = random.choice(posicoes_obstaculos)
-    tamanho_obstaculo = random.randint(20, 40)
-    obstaculos.append((x, y, tamanho_obstaculo))
+    obstaculos.append((x, y, 20, 20))
 
   #   # criar paredes invisiveis
   for items in posicoes_paredes:
@@ -289,6 +281,14 @@ refens = [Refem(x, y) for x, y in posicoes_refens[:num_refens]]
 def main():
   global jogador_x, jogador_y, nivel_concluido, tempo_restante, cpr, max_cpr, em_acao, pressed_space, progresso_tala
   global tempo_decremento, decremento_cpr, limite_cpr, tempo_ultimo_decremento, mensagem, progresso_enfaixamento
+
+  pygame.mixer.init()
+
+  pygame.mixer.music.load("Assets/SFX/Game On - Tricycle Riot.mp3")
+
+  pygame.mixer.music.set_volume(0.5)
+
+  pygame.mixer.music.play(-1)
 
   tela = pygame.display.set_mode((largura_tela, altura_tela))
   pygame.display.set_caption("D.S.S.T.R - Fase 1")
@@ -458,10 +458,8 @@ def main():
       fogo_index = (fogo_index + 1) % len(fogo_animacao_frames)
       fogo_update = current_time
 
-    # TRABALHANDO
     for obstaculo in obstaculos:
       tela.blit(fogo_animacao_frames[fogo_index], (obstaculo[0], obstaculo[1]))
-      # pygame.draw.rect(tela, vermelho, (obstaculo[0], obstaculo[1], obstaculo[2], obstaculo[2]))
 
     # desenhar os reféns
     for refem in refens:
