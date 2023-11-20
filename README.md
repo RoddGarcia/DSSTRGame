@@ -1,20 +1,16 @@
 # 🚀 D.S.S.T.R
 
-O jogo se baseia em salvar reféns feridos de um desastre natural. 
-
-## ℹ️ Descrição
-
-Uma descrição mais detalhada do seu projeto, incluindo seu propósito, funcionalidades e objetivos.
+O jogo se baseia em salvar reféns feridos de um desastre natural.
 
 ## 🎯 Objetivos
 
 - [x] Desenvolvimento estrutura do jogo
-- [ ] Desenvolvimento de gráficos em pixel
-- [ ] Documentação em GDD
+- [x] Desenvolvimento de gráficos em pixel
+- [x] Documentação em GDD
 
 ## 🛠️ Tecnologias Utilizadas
 
-- Foi utilizado a biblioteca PyGame para a criação do game.
+- Foi utilizada a biblioteca PyGame para a criação do game.
 
 ## 👨‍💻 Contribuidores
 
